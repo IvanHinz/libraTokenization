@@ -1,4 +1,4 @@
-import LaunchToken from '../LibraTokenFront.js'
+import LaunchToken from '../components/LibraTokenFront.js'
 
 export default function CurrencyPage() {
   return (

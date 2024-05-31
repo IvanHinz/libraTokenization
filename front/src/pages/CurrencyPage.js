@@ -1,5 +1,5 @@
-import LaunchCurrency from '../LibraCurrencyFront.js'
-import LaunchDEX from '../LibraDEXFront.js'
+import LaunchCurrency from '../components/LibraCurrencyFront.js'
+import LaunchDEX from '../components/LibraDEXFront.js'
 
 export default function CurrencyPage() {
   return (

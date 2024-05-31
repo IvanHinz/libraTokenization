@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import React, { useState } from 'react';
-import contractArtifacts from './artifacts/contracts/LibraCurrency.sol/LibraTokenCurrency.json';
+import contractArtifacts from '../artifacts/contracts/LibraCurrency.sol/LibraTokenCurrency.json';
 import "./LibraCurrencyFront.css"
 
 const provider = new ethers.providers.JsonRpcProvider('http://localhost:8545', { chainId: 1337 });

@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import React, { useState } from 'react';
-import contractArtifacts from './artifacts/contracts/LibraToken.sol/LibraToken.json';
+import contractArtifacts from '../artifacts/contracts/LibraToken.sol/LibraToken.json';
 import "./LibraTokenFront.css"
 
 const secondsInDay = 86400;
