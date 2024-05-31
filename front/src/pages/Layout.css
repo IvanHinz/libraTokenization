@@ -1,0 +1,19 @@
+.horizontal-list {
+  display: flex; /* Arrange list items in a row */
+  list-style: none; /* Remove default bullet points */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+}
+
+.horizontal-list li {
+  margin-right: 20px; /* Space between list items */
+}
+
+.horizontal-list li a {
+  text-decoration: none; /* Optional: Remove underline from links */
+  color: black; /* Optional: Set link color */
+}
+
+.horizontal-list li a:hover {
+  text-decoration: underline; /* Optional: Add underline on hover */
+}

@@ -55,7 +55,7 @@ function ApproveButton(props) {
     try {
       const contractAddress = OwnerToContract[props.ownerAddress];
       console.log('ownerAddress:', props.ownerAddress);
-      console.log('signerAddress:', provider.getSigner(props.ownerAddress));
+      console.log('spenderAddress:', spenderAddress);
       const owner = provider.getSigner(props.ownerAddress);
       const contract = new ethers.Contract(contractAddress, abi, owner);
 
