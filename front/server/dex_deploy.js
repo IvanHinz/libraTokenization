@@ -14,18 +14,18 @@ async function main() {
   console.log("Currency owner:", await provider.getSigner(0).getAddress());
   console.log("LibraTokenCurrency deployed to:", libraTokenCurrency.address);
 
-  const signerAsset = provider.getSigner(4);
+  const signerAsset = provider.getSigner(1);
   const LibraTokenAsset = new ethers.ContractFactory(Asset_contractArtifact.abi, Asset_contractArtifact.bytecode, signerAsset);
   const libraTokenAsset = await LibraTokenAsset.deploy();
   await libraTokenAsset.deployed();
-  console.log("Token owner:", await provider.getSigner(4).getAddress());
+  console.log("Token owner:", await provider.getSigner(1).getAddress());
   console.log("LibraTokenAsset deployed to:", libraTokenAsset.address);
 
-  const signerDEX = provider.getSigner(8);
+  const signerDEX = provider.getSigner(2);
   const LibraTokenDEX = new ethers.ContractFactory(DEX_contractArtifact.abi, DEX_contractArtifact.bytecode, signerDEX);
   const libraTokenDEX = await LibraTokenDEX.deploy(libraTokenCurrency.address, libraTokenAsset.address);
   await libraTokenDEX.deployed();
-  console.log("Dex owner:", await provider.getSigner(8).getAddress());
+  console.log("Dex owner:", await provider.getSigner(2).getAddress());
   console.log("LibraTokenDEX deployed to:", libraTokenDEX.address);
 }
 

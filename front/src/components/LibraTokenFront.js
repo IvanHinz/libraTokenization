@@ -1,19 +1,12 @@
 import { ethers } from 'ethers';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import contractArtifacts from '../artifacts/contracts/LibraToken.sol/LibraToken.json';
-import "./LibraTokenFront.css"
+import "./LibraTokenFront.css";
+import {getToken} from '../useToken.js';
 
 const secondsInDay = 86400;
 
 const provider = new ethers.providers.JsonRpcProvider('http://localhost:8545', { chainId: 1337 });
-
-const OwnerToContract = {
-  "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65": "0xbdEd0D2bf404bdcBa897a74E6657f1f12e5C6fb6",
-  "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc": "0x9bAaB117304f7D6517048e371025dB8f89a8DbE5",
-  "0x976EA74026E726554dB657fA54763abd0C3a0aa9": "0x82B769500E34362a76DF81150e12C746093D954F",
-  "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955": "0xef11D1c2aA48826D4c41e54ab82D1Ff5Ad8A64Ca"
-};
-
 const abi = contractArtifacts.abi;
 
 function MintButton(props) {
@@ -22,7 +15,7 @@ function MintButton(props) {
 
     // TODO: checking props to be correct
     try {
-      const contractAddress = OwnerToContract[props.ownerAddress];
+      const contractAddress = props.contractAddress;
       const owner = provider.getSigner(props.ownerAddress);
       const contract = new ethers.Contract(contractAddress, abi, owner);
 
@@ -51,7 +44,7 @@ function PriceButton(props) {
   const handlePrice = async () => {
     // TODO: checking props to be correct
     try {
-      const contractAddress = OwnerToContract[props.ownerAddress];
+      const contractAddress = props.contractAddress;
       const owner = provider.getSigner(props.ownerAddress);
       const contract = new ethers.Contract(contractAddress, abi, owner);
 
@@ -85,9 +78,8 @@ function ApproveButton(props) {
 
     // TODO: checking props to be correct
     try {
-      const contractAddress = OwnerToContract[props.ownerAddress];
+      const contractAddress = props.contractAddress;
       console.log('ownerAddress:', props.ownerAddress);
-      console.log('signerAddress:', provider.getSigner(props.ownerAddress));
       const owner = provider.getSigner(props.ownerAddress);
       const contract = new ethers.Contract(contractAddress, abi, owner);
 
@@ -115,7 +107,21 @@ export default function LaunchToken(props) {
     burnTimestamp: Math.floor(Date.now() / 1000) + (1 * secondsInDay),
   });
   const [receiverAddress, setReceiverAddress] = useState('');
-  const [ownerAddress, setOwnerAddress] = useState('0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65');
+
+  const [ownerAddress, setOwnerAddress] = useState('');
+  const [contractAddress, setContractAddress] = useState('');
+
+  useEffect(() => {
+    const fetchTokenData = async () => {
+      const token = await getToken();
+      if (token) {
+        setContractAddress(token.addressToken);
+        setOwnerAddress(token.userAddress);
+      }
+    };
+
+    fetchTokenData();
+  }, []);
 
   //Token price values
   const [idPrice, setIdPrice] = useState(0);
@@ -136,10 +142,6 @@ export default function LaunchToken(props) {
     setReceiverAddress(event.target.value);
   };
 
-  const handleOwnerAddressChange = (event) => {
-    setOwnerAddress(event.target.value);
-  }
-
   //Token price handlers
   const handleIdPriceChange = (event) => {
     setIdPrice(event.target.value);
@@ -149,13 +151,9 @@ export default function LaunchToken(props) {
   <div>
     <h1>Tokens</h1>
     <h3>Mint token</h3>
-    <label htmlFor="ownerAddress">Choose address to mint from:</label><br/>
-    <select name="ownerAddress" onChange={handleOwnerAddressChange}>
-      <option value="0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65">0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65</option>
-      <option value="0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc">0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc</option>
-      <option value="0x976EA74026E726554dB657fA54763abd0C3a0aa9">0x976EA74026E726554dB657fA54763abd0C3a0aa9</option>
-      <option value="0x14dC79964da2C08b23698B3D3cc7Ca32193d9955">0x14dC79964da2C08b23698B3D3cc7Ca32193d9955</option>
-    </select><br/>
+
+    <h4>Your address: {ownerAddress}</h4>
+    <h4>Your token contract address: {contractAddress}</h4>
 
     <label htmlFor="id">Enter id for mint:</label><br/>
     <input
@@ -200,7 +198,13 @@ export default function LaunchToken(props) {
       onChange={handleReceiverAddressChange}
     /><br/>
 
-    <MintButton ownerAddress={ownerAddress} id={id} metadata={metadata} receiverAddress={receiverAddress} /><br/>
+    <MintButton
+      ownerAddress={ownerAddress}
+      id={id}
+      metadata={metadata}
+      receiverAddress={receiverAddress}
+      contractAddress={contractAddress}
+    /><br/>
 
     <h3>Token price</h3>
     <label htmlFor="idPrice">Enter id of token:</label><br/>
@@ -211,11 +215,18 @@ export default function LaunchToken(props) {
       onChange={handleIdPriceChange}
     />
 
-    <PriceButton ownerAddress={ownerAddress} id={idPrice} /><br/>
+    <PriceButton
+      ownerAddress={ownerAddress}
+      id={idPrice}
+      contractAddress={contractAddress}
+    /><br/>
 
     <h3>Approve tokens</h3>
 
-    <ApproveButton ownerAddress={ownerAddress}/>
+    <ApproveButton
+      ownerAddress={ownerAddress}
+      contractAddress={contractAddress}
+    />
 
   </div>
   );
