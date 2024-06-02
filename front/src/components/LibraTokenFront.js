@@ -72,12 +72,11 @@ function PriceButton(props) {
 }
 
 function ApproveButton(props) {
-  const spenderAddress = "0x95bD8D42f30351685e96C62EDdc0d0613bf9a87A";
-
   const handleApprove = async () => {
 
     // TODO: checking props to be correct
     try {
+      const spenderAddress = props.dexAddress;
       const contractAddress = props.contractAddress;
       console.log('ownerAddress:', props.ownerAddress);
       const owner = provider.getSigner(props.ownerAddress);
@@ -110,6 +109,7 @@ export default function LaunchToken(props) {
 
   const [ownerAddress, setOwnerAddress] = useState('');
   const [contractAddress, setContractAddress] = useState('');
+  const [dexAddress, setDexAddress] = useState('');
 
   useEffect(() => {
     const fetchTokenData = async () => {
@@ -140,6 +140,10 @@ export default function LaunchToken(props) {
 
   const handleReceiverAddressChange = (event) => {
     setReceiverAddress(event.target.value);
+  };
+
+  const handleDexAddressChange = (event) => {
+    setDexAddress(event.target.value);
   };
 
   //Token price handlers
@@ -222,9 +226,17 @@ export default function LaunchToken(props) {
     /><br/>
 
     <h3>Approve tokens</h3>
+    <label htmlFor="dexAddress">Dex contract address:</label><br/>
+    <input
+      type="text"
+      id="dexAddress"
+      value={dexAddress}
+      onChange={handleDexAddressChange}
+    /><br/>
 
     <ApproveButton
       ownerAddress={ownerAddress}
+      dexAddress={dexAddress}
       contractAddress={contractAddress}
     />
 

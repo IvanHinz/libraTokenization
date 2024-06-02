@@ -28,6 +28,7 @@ const LoginRoute = ({ children }) => {
 };
 
 function App() {
+  const lol = 0;
   const { token, setToken } = useToken();
 
   return (

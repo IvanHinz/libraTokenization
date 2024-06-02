@@ -40,12 +40,11 @@ function MintButton(props) {
 }
 
 function ApproveButton(props) {
-  const spenderAddress = "0x95bD8D42f30351685e96C62EDdc0d0613bf9a87A";
-
   const handleApprove = async () => {
 
     // TODO: checking props to be correct
     try {
+      const spenderAddress = props.dexAddress;
       const contractAddress = props.contractAddress;
       console.log('ownerAddress:', props.ownerAddress);
       console.log('spenderAddress:', spenderAddress);
@@ -72,6 +71,7 @@ export default function LaunchCurrency() {
   const [receiverAddress, setReceiverAddress] = useState('');
   const [ownerAddress, setOwnerAddress] = useState('');
   const [contractAddress, setContractAddress] = useState('');
+  const [dexAddress, setDexAddress] = useState('');
 
   useEffect(() => {
     const fetchTokenData = async () => {
@@ -95,6 +95,10 @@ export default function LaunchCurrency() {
 
   const handleReceiverAddressChange = (event) => {
     setReceiverAddress(event.target.value);
+  };
+
+  const handleDexAddressChange = (event) => {
+    setDexAddress(event.target.value);
   };
 
   //Currency approve handlers
@@ -135,6 +139,13 @@ export default function LaunchCurrency() {
     /><br/>
 
     <h3>Approve currency</h3>
+    <label htmlFor="dexAddress">Dex contract address:</label><br/>
+    <input
+      type="text"
+      id="dexAddress"
+      value={dexAddress}
+      onChange={handleDexAddressChange}
+    /><br/>
     <label htmlFor="amountApprove">Enter amount to approve:</label><br/>
     <input
       type="number"
@@ -145,6 +156,7 @@ export default function LaunchCurrency() {
 
     <ApproveButton
       ownerAddress={ownerAddress}
+      dexAddress={dexAddress}
       contractAddress={contractAddress}
       amount={amountApprove}
     />
