@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract LibraTokenCurrency is ERC20, Ownable {
     constructor() ERC20("LibraTokenCurrency", "LBTC")  Ownable (msg.sender) {}
 
-    function mint(address to, uint256 amount) public onlyOwner {
+    function mint(address to, uint256 amount) public {
         _mint(to, amount);
     }
 }

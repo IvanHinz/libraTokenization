@@ -1,0 +1,22 @@
+.home-container {
+  font-family: Arial, sans-serif;
+  height: 100vh; /* Full viewport height */
+}
+
+.home-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.home-container button {
+  margin:0 auto;
+  display:block;
+  width: 10%;
+  padding: 10px;
+  background-color: #3385ff;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-size: 16px;
+  cursor: pointer;
+}

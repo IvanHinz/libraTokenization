@@ -27,7 +27,7 @@ contract LibraToken is ERC721, ERC721Enumerable, Ownable  {
     // Mapping from token id to token data
     mapping(uint256 => Metadata) private _metadataMapping;
 
-    function serialMint(address to, uint256[] memory tokenIds, Metadata memory inputMetadata) external onlyOwner {
+    function serialMint(address to, uint256[] memory tokenIds, Metadata memory inputMetadata) external {
         // Metadata memory inputMetadata in input
         for (uint256 i = 0; i < tokenIds.length; i++){
             _metadataMapping[tokenIds[i]] = inputMetadata;

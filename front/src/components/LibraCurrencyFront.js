@@ -39,6 +39,57 @@ function MintButton(props) {
   );
 }
 
+function BalanceButton(props) {
+  const [balance, setBalance] = useState(-1);
+
+  const handleBalance = async () => {
+
+    // TODO: checking props to be correct
+    try {
+      const contractAddress = props.contractAddress;
+      const owner = provider.getSigner(props.ownerAddress);
+      const contract = new ethers.Contract(contractAddress, abi, owner);
+      setBalance(ethers.utils.formatUnits(await contract.balanceOf(props.receiverAddress), 18));
+    } catch (error) {
+      console.error('Couldn\'t get balance:', error);
+    }
+  };
+
+  return (
+    <>
+    <button onClick={handleBalance}>Balance</button>
+    {balance !== -1 && (
+        <div>Balance is {balance}</div>
+    )}
+    </>
+  );
+}
+
+function TotalSupply(props) {
+  const [amount, setAmount] = useState(-1);
+
+  const getSupply = async () => {
+    // TODO: checking props to be correct
+    try {
+      const contractAddress = props.contractAddress;
+      const owner = provider.getSigner(props.ownerAddress);
+      const contract = new ethers.Contract(contractAddress, abi, owner);
+      setAmount(ethers.utils.formatUnits(await contract.totalSupply(), 18));
+    } catch (error) {
+      console.error('Couldn\'t get supply:', error);
+    }
+  };
+
+  return (
+    <>
+    <button onClick={getSupply}>Total supply</button>
+    {amount !== -1 && (
+        <div>Total supply is {amount}</div>
+    )}
+    </>
+  );
+}
+
 function ApproveButton(props) {
   const handleApprove = async () => {
 
@@ -69,6 +120,7 @@ export default function LaunchCurrency() {
   //Currency mint values
   const [amount, setAmount] = useState(0);
   const [receiverAddress, setReceiverAddress] = useState('');
+  const [balanceAddress, setBalanceAddress] = useState('');
   const [ownerAddress, setOwnerAddress] = useState('');
   const [contractAddress, setContractAddress] = useState('');
   const [dexAddress, setDexAddress] = useState('');
@@ -97,6 +149,10 @@ export default function LaunchCurrency() {
     setReceiverAddress(event.target.value);
   };
 
+  const handleBalanceAddressChange = (event) => {
+    setBalanceAddress(event.target.value);
+  };
+
   const handleDexAddressChange = (event) => {
     setDexAddress(event.target.value);
   };
@@ -108,12 +164,17 @@ export default function LaunchCurrency() {
   };
 
   return (
-  <div>
+  <div className="currency-wrapper">
     <h1>Currency</h1>
 
     <h4>Your address: {ownerAddress}</h4>
     <h4>Your currency contract address: {contractAddress}</h4>
+    <TotalSupply
+      ownerAddress={ownerAddress}
+      contractAddress={contractAddress}
+    />
 
+    <h3>Mint tokens</h3>
     <label htmlFor="amount">Enter amount to mint:</label><br/>
     <input
       type="number"
@@ -136,6 +197,20 @@ export default function LaunchCurrency() {
       amount={amount}
       contractAddress={contractAddress}
       receiverAddress={receiverAddress}
+    /><br/>
+
+    <label htmlFor="balanceAddress">Balance of:</label><br/>
+    <input
+      type="text"
+      id="balanceAddress"
+      value={balanceAddress}
+      onChange={handleBalanceAddressChange}
+    /><br/>
+
+    <BalanceButton
+      ownerAddress={ownerAddress}
+      receiverAddress={balanceAddress}
+      contractAddress={contractAddress}
     /><br/>
 
     <h3>Approve currency</h3>

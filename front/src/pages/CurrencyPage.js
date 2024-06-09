@@ -1,12 +1,16 @@
 import LaunchCurrency from '../components/LibraCurrencyFront.js'
 import LaunchDEX from '../components/LibraDEXFront.js'
+import './CurrencyPage.css'
 
 export default function CurrencyPage() {
   return (
-    <div>
+    <div className="currency-container">
+      <div className="left-part">
       <LaunchCurrency />
-      <hr />
+      </div>
+      <div className="right-part">
       <LaunchDEX />
+      </div>
     </div>
   );
 }

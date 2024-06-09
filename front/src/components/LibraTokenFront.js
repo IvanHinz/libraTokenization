@@ -39,7 +39,7 @@ function MintButton(props) {
 }
 
 function PriceButton(props) {
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState(-1);
 
   const handlePrice = async () => {
     // TODO: checking props to be correct
@@ -64,7 +64,7 @@ function PriceButton(props) {
   return (
     <>
     <button onClick={handlePrice}>Price of token {props.id}</button>
-    {price !== null && (
+    {price !== -1 && (
         <div>Token {props.id} price is {price}</div>
     )}
     </>
@@ -152,13 +152,13 @@ export default function LaunchToken(props) {
   };
 
   return (
-  <div>
+  <div className="token-wrapper">
     <h1>Tokens</h1>
-    <h3>Mint token</h3>
 
     <h4>Your address: {ownerAddress}</h4>
     <h4>Your token contract address: {contractAddress}</h4>
 
+    <h3>Mint NFT</h3>
     <label htmlFor="id">Enter id for mint:</label><br/>
     <input
       type="number"
@@ -217,7 +217,7 @@ export default function LaunchToken(props) {
       id="idPrice"
       value={idPrice}
       onChange={handleIdPriceChange}
-    />
+    /><br/>
 
     <PriceButton
       ownerAddress={ownerAddress}

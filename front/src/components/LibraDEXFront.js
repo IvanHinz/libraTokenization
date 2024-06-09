@@ -2,6 +2,7 @@ import { ethers } from 'ethers';
 import React, { useState } from 'react';
 import contractArtifacts from '../artifacts/contracts/LibraDEX.sol/LibraTokenDEX.json';
 import {getToken} from '../useToken.js';
+import './LibraDEXFront.css';
 
 const provider = new ethers.providers.JsonRpcProvider('http://localhost:8545', { chainId: 1337 });
 const abi = contractArtifacts.abi;
@@ -86,7 +87,7 @@ export default function LaunchDEX() {
   };
 
   return (
-    <div>
+    <div className="dex-wrapper">
       <h1>DEX</h1>
       <h3>Deploy contract to buy token</h3>
       <label htmlFor="deploy">Enter token address:</label><br/>

@@ -1,19 +1,37 @@
-.horizontal-list {
+nav {
+  background-color: #5353c6; /* Dark background color for the nav */
+  padding: 10px 0; /* Vertical padding for the nav */
+}
+
+.navigation {
   display: flex; /* Arrange list items in a row */
   list-style: none; /* Remove default bullet points */
   padding: 0; /* Remove default padding */
   margin: 0; /* Remove default margin */
+  justify-content: center; /* Center the list items horizontally */
 }
 
-.horizontal-list li {
+/* Style the list items */
+.navigation li {
   margin-right: 20px; /* Space between list items */
 }
 
-.horizontal-list li a {
-  text-decoration: none; /* Optional: Remove underline from links */
-  color: black; /* Optional: Set link color */
+/* Remove the margin from the last list item */
+.navigation li:last-child {
+  margin-right: 0;
 }
 
-.horizontal-list li a:hover {
-  text-decoration: underline; /* Optional: Add underline on hover */
+/* Style the links */
+.navigation li a {
+  text-decoration: none; /* Remove underline from links */
+  color: white; /* Set link color to white */
+  padding: 10px 15px; /* Add padding around the links */
+  border-radius: 5px; /* Rounded corners for the links */
+  transition: background-color 0.3s; /* Smooth transition for background color change */
+}
+
+/* Change background color on hover */
+.navigation li a:hover {
+  background-color: #575757; /* Light gray background on hover */
+  text-decoration: underline; /* Add underline on hover */
 }

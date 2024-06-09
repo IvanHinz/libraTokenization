@@ -1,9 +1,9 @@
-.currency-wrapper h1 {
+.dex-wrapper h1 {
   text-align: center;
   margin-bottom: 20px;
 }
 
-.currency-wrapper button {
+.dex-wrapper button {
   width: 20%;
   padding: 10px;
   background-color: #3385ff;

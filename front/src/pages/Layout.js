@@ -5,7 +5,7 @@ export default function Layout()  {
   return (
     <>
       <nav>
-        <ul className="horizontal-list">
+        <ul className="navigation">
           <li>
             <Link to="/">Home</Link>
           </li>
@@ -17,7 +17,6 @@ export default function Layout()  {
           </li>
         </ul>
       </nav>
-      <hr />
       <Outlet />
     </>
   )

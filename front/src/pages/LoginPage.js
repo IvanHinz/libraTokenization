@@ -3,7 +3,7 @@ import './LoginPage.css'
 
 export default function LoginPage({ setToken }) {
   return (
-    <div>
+    <div className="login-container">
       <LaunchLogin setToken={setToken}/>
     </div>
   );

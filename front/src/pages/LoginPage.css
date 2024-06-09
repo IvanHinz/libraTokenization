@@ -1,5 +1,8 @@
-.login-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+  height: 100vh; /* Full viewport height */
+  background-color: #b3d9ff; /* Optional: light background color */
 }
