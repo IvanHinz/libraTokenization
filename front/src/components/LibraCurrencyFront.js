@@ -10,20 +10,17 @@ const abi = contractArtifacts.abi;
 function MintButton(props) {
 
   const handleMint = async () => {
-
-    // TODO: checking props to be correct
     try {
       const contractAddress = props.contractAddress;
       console.log('ownerAddress:', props.ownerAddress);
       const owner = provider.getSigner(props.ownerAddress);
       const contract = new ethers.Contract(contractAddress, abi, owner);
 
-      // Debugging: Log the receiver address and amount
       console.log('Minting', props.amount.toString(), 'LBTC to', props.receiverAddress);
 
       const tx = await contract.mint(props.receiverAddress, ethers.utils.parseUnits(props.amount, 18));
       await tx.wait();
-      console.log('Minting successful! ', props.amount);
+      console.log('Minting successful!', props.amount);
       console.log('Balance', ethers.utils.formatUnits(await contract.balanceOf(props.receiverAddress), 18));
     } catch (error) {
       console.error('Minting failed:', error);
@@ -40,7 +37,6 @@ function BalanceButton(props) {
 
   const handleBalance = async () => {
 
-    // TODO: checking props to be correct
     try {
       const contractAddress = props.contractAddress;
       const owner = provider.getSigner(props.ownerAddress);
@@ -65,7 +61,6 @@ function TotalSupply(props) {
   const [amount, setAmount] = useState(-1);
 
   const getSupply = async () => {
-    // TODO: checking props to be correct
     try {
       const contractAddress = props.contractAddress;
       const owner = provider.getSigner(props.ownerAddress);
@@ -89,7 +84,6 @@ function TotalSupply(props) {
 function ApproveButton(props) {
   const handleApprove = async () => {
 
-    // TODO: checking props to be correct
     try {
       const spenderAddress = props.dexAddress;
       const contractAddress = props.contractAddress;

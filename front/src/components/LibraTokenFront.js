@@ -12,8 +12,6 @@ const abi = contractArtifacts.abi;
 function MintButton(props) {
 
   const handleMint = async () => {
-
-    // TODO: checking props to be correct
     try {
       const contractAddress = props.contractAddress;
       const owner = provider.getSigner(props.ownerAddress);
@@ -46,7 +44,6 @@ function PriceButton(props) {
   const [price, setPrice] = useState(-1);
 
   const handlePrice = async () => {
-    // TODO: checking props to be correct
     try {
       const contractAddress = props.contractAddress;
       const owner = provider.getSigner(props.ownerAddress);
@@ -79,7 +76,6 @@ function ReinvestButton(props) {
   const [message, setMessage] = useState('');
 
   const handleReinvest = async () => {
-    // TODO: checking props to be correct
     try {
       const contractAddress = props.contractAddress;
       const owner = provider.getSigner(props.ownerAddress);
@@ -129,7 +125,6 @@ function ReinvestButton(props) {
 function ApproveButton(props) {
   const handleApprove = async () => {
 
-    // TODO: checking props to be correct
     try {
       const spenderAddress = props.dexAddress;
       const contractAddress = props.contractAddress;
