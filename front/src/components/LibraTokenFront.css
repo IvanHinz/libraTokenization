@@ -4,7 +4,7 @@
 }
 
 .token-wrapper button {
-  width: 9%;
+  width: 20%;
   padding: 10px;
   background-color: #3385ff;
   color: white;
@@ -12,4 +12,26 @@
   border-radius: 3px;
   font-size: 16px;
   cursor: pointer;
+}
+
+/* Style for the Flexbox container */
+.token-wrapper {
+  display: flex; /* Arrange children in a row */
+  height: 100vh; /* Full viewport height */
+}
+
+/* Style for the left part */
+.left-part, .right-part {
+  flex: 1; /* Each part takes up equal space */
+  padding: 20px; /* Add some padding */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+/* Optional: Add borders to separate the two parts visually */
+.left-part {
+  border-right: 1px solid #ccc; /* Light border on the right side */
+}
+
+.right-part {
+  border-left: 1px solid #ccc; /* Light border on the left side */
 }

@@ -18,14 +18,10 @@ function MintButton(props) {
       const owner = provider.getSigner(props.ownerAddress);
       const contract = new ethers.Contract(contractAddress, abi, owner);
 
-
-      // Debugging: Log the signer address
-      const ownerAddress = await owner.getAddress();
-      console.log('owner address:', ownerAddress);
       // Debugging: Log the receiver address and amount
       console.log('Minting', props.amount.toString(), 'LBTC to', props.receiverAddress);
 
-      const tx = await contract.connect(owner).mint(props.receiverAddress, ethers.utils.parseUnits(props.amount, 18));
+      const tx = await contract.mint(props.receiverAddress, ethers.utils.parseUnits(props.amount, 18));
       await tx.wait();
       console.log('Minting successful! ', props.amount);
       console.log('Balance', ethers.utils.formatUnits(await contract.balanceOf(props.receiverAddress), 18));
@@ -131,6 +127,7 @@ export default function LaunchCurrency() {
       if (token) {
         setContractAddress(token.addressCurrency);
         setOwnerAddress(token.userAddress);
+        setDexAddress(token.addressDex);
       }
     };
 
@@ -153,10 +150,6 @@ export default function LaunchCurrency() {
     setBalanceAddress(event.target.value);
   };
 
-  const handleDexAddressChange = (event) => {
-    setDexAddress(event.target.value);
-  };
-
   //Currency approve handlers
 
   const handleAmountApproveChange = (event) => {
@@ -168,7 +161,6 @@ export default function LaunchCurrency() {
     <h1>Currency</h1>
 
     <h4>Your address: {ownerAddress}</h4>
-    <h4>Your currency contract address: {contractAddress}</h4>
     <TotalSupply
       ownerAddress={ownerAddress}
       contractAddress={contractAddress}
@@ -214,13 +206,6 @@ export default function LaunchCurrency() {
     /><br/>
 
     <h3>Approve currency</h3>
-    <label htmlFor="dexAddress">Dex contract address:</label><br/>
-    <input
-      type="text"
-      id="dexAddress"
-      value={dexAddress}
-      onChange={handleDexAddressChange}
-    /><br/>
     <label htmlFor="amountApprove">Enter amount to approve:</label><br/>
     <input
       type="number"

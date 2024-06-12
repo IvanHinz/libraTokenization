@@ -14,6 +14,9 @@ const users = {
 };
 
 const deployedContracts = {
+  addressCurrency: "",
+  addressToken: "",
+  addressDex: ""
 };
 
 // Helper function to wrap exec in a promise
@@ -23,30 +26,43 @@ app.post('/login', async(req, res) => {
   const { username, password } = req.body;
   const deployCurrencyCommand = 'npx hardhat run currency_deploy.js';
   const deployTokenCommand = 'npx hardhat run token_deploy.js';
+  const deployDexCommand = 'npx hardhat run dex_deploy.js';
 
   if (users[username] && users[username].password === password) {
-    if (users[username].address in deployedContracts) {
+    if (deployedContracts.addressCurrency != "") {
       res.send({
         userAddress: users[username].address,
-        addressCurrency: deployedContracts[users[username].address].addressCurrency,
-        addressToken: deployedContracts[users[username].address].addressToken
+        addressCurrency: deployedContracts.addressCurrency,
+        addressToken: deployedContracts.addressToken,
+        addressDex: deployedContracts.addressDex
       });
     } else {
       const signerAddress = users[username].address;
       const env = { ...process.env, signerAddress };
       try {
-        const { stdout: addressCurrency } = await execPromise(deployCurrencyCommand, { env });
-        const { stdout: addressToken } = await execPromise(deployTokenCommand, { env });
+        const { stdout: currencyOutput } = await execPromise(deployCurrencyCommand, { env });
+        const addressCurrency = currencyOutput.trim();
+        const { stdout: tokenOutput } = await execPromise(deployTokenCommand, { env });
+        const addressToken = tokenOutput.trim();
 
-        deployedContracts[signerAddress] = {
-          addressCurrency: addressCurrency.trim(),
-          addressToken: addressToken.trim()
+        deployedContracts.addressCurrency = addressCurrency;
+        deployedContracts.addressToken =  addressToken;
+
+        const env_dex = {
+          ...process.env,
+          signerAddress,
+          addressCurrency,
+          addressToken
         };
+        const { stdout: addressDex } = await execPromise(deployDexCommand, { env: env_dex });
+
+        deployedContracts.addressDex =  addressDex.trim();
 
         res.send({
           userAddress: users[username].address,
-          addressCurrency: addressCurrency.trim(),
-          addressToken: addressToken.trim()
+          addressCurrency: addressCurrency,
+          addressToken: addressToken,
+          addressDex: addressDex.trim()
         });
       } catch (error) {
         console.error(error);
@@ -55,32 +71,6 @@ app.post('/login', async(req, res) => {
     }
   } else {
     res.status(401).send({ message: 'Invalid username or password' });
-  }
-});
-
-app.post('/dex', async(req, res) => {
-  userAddress = req.body.userAddress;
-  addressToken = req.body.tokenAddress;
-  const deployDexCommand = 'npx hardhat run dex_deploy.js';
-  const signerAddress = userAddress;
-  try {
-    const env = {
-      ...process.env,
-      signerAddress,
-      addressCurrency: deployedContracts[userAddress].addressCurrency,
-      addressToken
-    };
-    console.log(signerAddress);
-    console.log(deployedContracts[userAddress].addressCurrency);
-    console.log(addressToken);
-
-    const { stdout: addressDex } = await execPromise(deployDexCommand, { env });
-    res.send({
-      addressDex: addressDex.trim()
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ error: 'Deployment failed' });
   }
 });
 

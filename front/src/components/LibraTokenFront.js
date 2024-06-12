@@ -24,6 +24,10 @@ function MintButton(props) {
       console.log('owner address:', ownerAddress);
 
       const ids = [props.id]; // Single tokenId
+      props.metadata.ipoTimestamp = Math.floor(Date.now() / 1000) - 4 * secondsInDay;
+
+      console.log('Ipo:', new Date(props.metadata.ipoTimestamp * 1000));
+      console.log('Burn:', new Date(props.metadata.burnTimestamp * 1000));
 
       const tx = await contract.connect(owner).serialMint(props.receiverAddress, ids, props.metadata);
       await tx.wait();
@@ -71,6 +75,57 @@ function PriceButton(props) {
   );
 }
 
+function ReinvestButton(props) {
+  const [message, setMessage] = useState('');
+
+  const handleReinvest = async () => {
+    // TODO: checking props to be correct
+    try {
+      const contractAddress = props.contractAddress;
+      const owner = provider.getSigner(props.ownerAddress);
+      const contract = new ethers.Contract(contractAddress, abi, owner);
+
+      if (await contract.isBurnable(props.id)) {
+        const returnedPrice = await contract.price(props.id, Math.floor(Date.now() / 1000));
+        const timeDiff = await contract.diff_ipo_burn_timestamps(props.id);
+        const interestRate = await contract.dailyInterestRateById(props.id);
+        const metadata = {
+          ipoSerial: 0,
+          ipoPrice: returnedPrice,
+          ipoTimestamp: Math.floor(Date.now() / 1000),
+          dailyInterestRate: interestRate,
+          burnTimestamp: Math.floor(Date.now() / 1000) + timeDiff * secondsInDay + secondsInDay
+        };
+
+        const burn = await contract.burn(props.id);
+        await burn.wait();
+
+        const ids = [props.id];
+        const tx = await contract.serialMint(props.ownerAddress, ids, metadata);
+        await tx.wait();
+
+        console.log('new ipo:', new Date(metadata.ipoTimestamp * 1000));
+        console.log('new burn:', new Date(metadata.burnTimestamp * 1000));
+
+        setMessage("Reinvested successfully");
+      } else {
+        setMessage("Not burnable yet")
+      }
+    } catch (error) {
+      console.error('Reinvestment failed:', error);
+    }
+  };
+
+  return (
+    <>
+    <button onClick={handleReinvest}>Reinvest token {props.id}</button>
+    {message !== '' && (
+        <div>{message}</div>
+    )}
+    </>
+  );
+}
+
 function ApproveButton(props) {
   const handleApprove = async () => {
 
@@ -111,20 +166,23 @@ export default function LaunchToken(props) {
   const [contractAddress, setContractAddress] = useState('');
   const [dexAddress, setDexAddress] = useState('');
 
+  //Token price values
+  const [idPrice, setIdPrice] = useState(0);
+
+  const [idReinvest, setIdReinvest] = useState(0);
+
   useEffect(() => {
     const fetchTokenData = async () => {
       const token = await getToken();
       if (token) {
         setContractAddress(token.addressToken);
         setOwnerAddress(token.userAddress);
+        setDexAddress(token.addressDex);
       }
     };
 
     fetchTokenData();
   }, []);
-
-  //Token price values
-  const [idPrice, setIdPrice] = useState(0);
 
   //Tokens mint handlers
   const handleIDChange = (event) => {
@@ -142,21 +200,21 @@ export default function LaunchToken(props) {
     setReceiverAddress(event.target.value);
   };
 
-  const handleDexAddressChange = (event) => {
-    setDexAddress(event.target.value);
-  };
-
   //Token price handlers
   const handleIdPriceChange = (event) => {
     setIdPrice(event.target.value);
   };
 
+  const handleIdReinvestChange = (event) => {
+    setIdReinvest(event.target.value);
+  };
+
   return (
   <div className="token-wrapper">
+    <div className="left-part">
     <h1>Tokens</h1>
 
     <h4>Your address: {ownerAddress}</h4>
-    <h4>Your token contract address: {contractAddress}</h4>
 
     <h3>Mint NFT</h3>
     <label htmlFor="id">Enter id for mint:</label><br/>
@@ -225,20 +283,30 @@ export default function LaunchToken(props) {
       contractAddress={contractAddress}
     /><br/>
 
-    <h3>Approve tokens</h3>
-    <label htmlFor="dexAddress">Dex contract address:</label><br/>
-    <input
-      type="text"
-      id="dexAddress"
-      value={dexAddress}
-      onChange={handleDexAddressChange}
-    /><br/>
-
+    <h3>Approve token</h3>
     <ApproveButton
       ownerAddress={ownerAddress}
       dexAddress={dexAddress}
       contractAddress={contractAddress}
     />
+    </div>
+
+    <div className="right-part">
+    <h1>Reinvestment</h1>
+    <label htmlFor="idReinvest">Enter id of token:</label><br/>
+    <input
+      type="number"
+      id="idReinvest"
+      value={idReinvest}
+      onChange={handleIdReinvestChange}
+    /><br/>
+
+    <ReinvestButton
+      ownerAddress={ownerAddress}
+      id={idReinvest}
+      contractAddress={contractAddress}
+    /><br/>
+    </div>
 
   </div>
   );

@@ -54,6 +54,18 @@ contract LibraToken is ERC721, ERC721Enumerable, Ownable  {
         // return (neededTimestampForPrice, ipoTimestamp);
     }
 
+    function dailyInterestRateById(uint256 tokenId) public view returns (uint256){
+        uint256 dailyInterestRate = _metadataMapping[tokenId].dailyInterestRate;
+        return dailyInterestRate;
+    }
+
+    function diff_ipo_burn_timestamps(uint256 tokenId) public view returns (uint256){
+        uint256 ipoTimestamp = _metadataMapping[tokenId].ipoTimestamp;
+        uint256 burnTimestamp = _metadataMapping[tokenId].burnTimestamp;
+        uint256  diff_ipo_burn_days = (burnTimestamp - ipoTimestamp) / secondsInDay;
+        return diff_ipo_burn_days;
+    }
+
     function _requireMinted(uint tokenId) internal view virtual {        
         require(ownerOf(tokenId) != address(0), "LBT: token does not exist");
     }
