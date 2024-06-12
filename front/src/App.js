@@ -11,7 +11,7 @@ import { useToken, getToken } from './useToken.js'
 
 const ProtectedRoute = ({ children }) => {
   const token = getToken();
-  if (!token) {
+  if (!token || !token.userAddress) {
     // user is not authenticated
     return <Navigate to="/login" />;
   }
@@ -20,7 +20,7 @@ const ProtectedRoute = ({ children }) => {
 
 const LoginRoute = ({ children }) => {
   const token = getToken();
-  if (token) {
+  if (token && token.userAddress) {
     // user is not authenticated
     return <Navigate to="/" />;
   }
@@ -28,7 +28,6 @@ const LoginRoute = ({ children }) => {
 };
 
 function App() {
-  const lol = 0;
   const { token, setToken } = useToken();
 
   return (
