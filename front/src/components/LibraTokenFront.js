@@ -24,7 +24,7 @@ function MintButton(props) {
       console.log('owner address:', ownerAddress);
 
       const ids = [props.id]; // Single tokenId
-      props.metadata.ipoTimestamp = Math.floor(Date.now() / 1000) - 4 * secondsInDay;
+      props.metadata.ipoTimestamp = Math.floor(Date.now() / 1000);
 
       console.log('Ipo:', new Date(props.metadata.ipoTimestamp * 1000));
       console.log('Burn:', new Date(props.metadata.burnTimestamp * 1000));
